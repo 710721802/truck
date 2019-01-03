@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Truck</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
+			#info a {
+				color: #046;
+				font-weight: bold;
+			}
+			#show {
+				background-color: black;
+				position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+				filter:alpha(opacity=0);
+				z-index: 1000;
+			}
+
+			/*cssReset*/
+			*{margin: 0;padding: 0;-webkit-text-size-adjust: none;}
+			html,body{width: 100%;height: 100%;overflow: hidden;background-color: #222;background-size: cover;font-size: .12rem;position: fixed;top:0;left:0;text-align: justify;}
+			/*禁止浏览器选择*/
+			html{-moz-user-select: none; /*火狐*/ -webkit-user-select: none;  /*webkit浏览器*/ -ms-user-select: none;   /*IE10*/ -khtml-user-select: none; /*早期浏览器*/ user-select: none; }
+			div {-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+			ul,li{list-style: none;}
+			.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+			.clearfix{*+height:1%;}
+			.f_l{float: left;}
+			.lucencyBk{background: rgba(0,0,0,0.2);}
+
+			/*MainCss*/
+			.CarIconBox{position: absolute;bottom: .6rem;width: 90%;left: 5%;text-align: center;z-index: 9;}
+			.BoxItemList{width: 1rem;border-radius: .06rem;display: inline-block;vertical-align: bottom;position: relative;z-index: 9;}
+			.IconToggle{width: 100%;height: 1rem;}
+			.Box_01_IconListItem,
+			.Box_02_IconListItem{height: 1rem;background-repeat: no-repeat;background-position: center;background-size: 70%;}
+			/*第1列icon*/
+			.Box_01_IconListItem01{background-image: url(images/ui/color/c1.png);}
+			.Box_01_IconListItem02{background-image: url(images/ui/color/c2.png);}
+			.Box_01_IconListItem03{background-image: url(images/ui/color/c3.png);}
+			.Box_01_IconListItem04{background-image: url(images/ui/color/c4.png);}
+			.Box_01_IconListItem05{background-image: url(images/ui/color/c5.png);}
+			.Box_01_IconListItem06{background-image: url(images/ui/color/c6.png);}
+			/*第1列iconCurrent*/
+			.Box_01_IconListItem01.current{background-image: url(images/ui/color/c1_1.png);}
+			.Box_01_IconListItem02.current{background-image: url(images/ui/color/c2_1.png);}
+			.Box_01_IconListItem03.current{background-image: url(images/ui/color/c3_1.png);}
+			.Box_01_IconListItem04.current{background-image: url(images/ui/color/c4_1.png);}
+			.Box_01_IconListItem05.current{background-image: url(images/ui/color/c5_1.png);}
+			.Box_01_IconListItem06.current{background-image: url(images/ui/color/c6_1.png);}
+			/*第2列component icon*/
+			.Box_02_IconListItem01{background-image: url(images/ui/component/fadongji.png);}
+			.Box_02_IconListItem02{background-image: url(images/ui/component/biansu.png);}
+			.Box_02_IconListItem03{background-image: url(images/ui/component/youxiang.png);}
+			.Box_02_IconListItem04{background-image: url(images/ui/component/qiao.png);}
+			/*第2列component iconCurrent*/
+			.Box_02_IconListItem01.current{background-image: url(images/ui/component/fadongji_2.png);}
+			.Box_02_IconListItem02.current{background-image: url(images/ui/component/biansu_2.png);}
+			.Box_02_IconListItem03.current{background-image: url(images/ui/component/youxiang_2.png);}
+			.Box_02_IconListItem04.current{background-image: url(images/ui/component/qiao_2.png);}
+
+			.IconToggleBox{height: 100%;background-repeat: no-repeat;background-position: center;background-size: 70%;}
+			/*一级Icon背景*/
+			.Box_01_Icon{background-image: url(images/ui/peise_1.png);}
+			.Box_02_Icon{background-image: url(images/ui/lingjian_1.png);}
+			.Box_03_Icon{background-image: url(images/ui/luntai_1.png);}
+			.Box_04_Icon{background-image: url(images/ui/xingshi_1.png);}
+			.Box_05_Icon{background-image: url(images/ui/chdeng_1.png);}
+			.Box_06_Icon{background-image: url(images/ui/neishi_1.png);}
+			/*一级IconCurrent背景*/
+			.Box_01_Icon.current{background-image: url(images/ui/peise_2.png);}
+			.Box_02_Icon.current{background-image: url(images/ui/lingjian_2.png);}
+			.Box_03_Icon.current{background-image: url(images/ui/luntai_2.png);}
+			.Box_04_Icon.current{background-image: url(images/ui/xingshi_2.png);}
+			.Box_05_Icon.current{background-image: url(images/ui/chdeng_2.png);}
+			/*说明:主场景中内饰按钮的样式 只显示neishi_1 当进入在场内场景中 显示neishi_2*/
+			.Box_06_Icon.current{background-image: url(images/ui/neishi_1.png);}
+			.returnBtnNeishi{width: 1rem;height: 1rem;position: absolute;bottom: .6rem;left: 50%;margin-left: -.5rem;z-index: 10;
+			background-image: url(images/ui/neishi_2.png);background-size: 70%;background-repeat: no-repeat;background-position: center;}
+
+		</style>
+	</head>
+	<script>
+		//JS—rem
+		!function(n){
+			var  e=n.document,
+					t=e.documentElement,
+					i=720,
+					d=i/100,
+					o="orientationchange"in n?"orientationchange":"resize",
+					a=function(){
+						var n=t.clientWidth||320;n>720&&(n=720);
+						t.style.fontSize=n/d+"px"
+					};
+					e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))
+		}(window);
+	</script>
+	<body>
+		<script src="build/jquery-1.9.1.min.js"></script>
+		<script src="build/three.js"></script>
+
+		<script src="js/libs/inflate.min.js"></script>
+		<script src="js/loaders/FBXLoader.js"></script>
+
+		<script src="js/controls/OrbitControls.js"></script>
+
+		<script src="js/utils/SceneUtils.js"></script>
+		<script src="js/objects/Lensflare.js"></script>
+
+		<script src="js/Detector.js"></script>
+		<script src="js/libs/dat.gui.min.js"></script>
+		<script src="js/libs/tween.min.js"></script>
+
+		<script id="vs" type="x-shader/x-vertex">
+			varying vec2 vUv;
+			void main() {
+				vUv = uv;
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+		</script>
+		<script id="fs" type="x-shader/x-fragment">
+			uniform sampler2D map;
+			uniform sampler2D alphamap;
+			uniform float offsetx;
+			uniform float offsety;
+			varying vec2 vUv;
+		
+			void main() {
+				float x = mod(offsetx + vUv.x + 1.0, 1.0);
+				float y = mod(offsety + vUv.y + 1.0, 1.0);
+				gl_FragColor = texture2D(map, vec2(x,y));
+				gl_FragColor.a = texture2D(alphamap, vUv).r;
+			}
+		</script>
+		<style>
+			/*Loading界面*/
+            /*  模态框样式 */
+            .loading {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: 0;
+                background-color: #1c1c1c;
+                opacity: 1;
+                z-index: 1000;
+            }
+
+            /* 动图样式 */
+            .loading .gif {width: 7rem;max-width: 90%;
+				max-height: 90%;z-index: 1001;}
+			.loading .gif .bkImg{width: 100%;height: 4rem;background: url('images/loading/loading.gif') no-repeat center center;background-size: contain;}
+			.loading .gif .wz{text-align: center;color: #fff;font-size: .36rem;}
+		</style>
+		<!-- 模态框部分 -->
+        <div class="loading">
+			<div class="gif">
+				<div class="bkImg"></div>
+				<div class="wz">0%</div>
+			</div>
+			
+		</div>
+		<!-- 切场动画 -->
+		<div id="show" style="display:none;"></div>
+		<!-- 返回按钮 -->
+        <div class="returnBtnNeishi"></div>
+		<!-- 底部icon -->
+		<div class="CarIconBox clearfix">
+			<div class="BoxItemList Box_01 IconToggleEvent" id="color">
+				<ul class="Box_01_IconList" style="display: none;">
+					<li class="Box_01_IconListItem Box_01_IconListItem01 CurrentToggleClick current"></li>
+					<li class="Box_01_IconListItem Box_01_IconListItem02 CurrentToggleClick"></li>
+					<li class="Box_01_IconListItem Box_01_IconListItem03 CurrentToggleClick"></li>
+					<li class="Box_01_IconListItem Box_01_IconListItem04 CurrentToggleClick"></li>
+					<li class="Box_01_IconListItem Box_01_IconListItem05 CurrentToggleClick"></li>
+					<li class="Box_01_IconListItem Box_01_IconListItem06 CurrentToggleClick"></li>
+				</ul>
+				<div class="IconToggle">
+					<div class="IconToggleBox Box_01_Icon"></div>
+				</div>
+			</div>
+			<div class="BoxItemList Box_02 IconToggleEvent" id="part">
+				<ul class="Box_02_IconList Box_02_IconListToggleScene" style="display: none;">
+					<li class="Box_02_IconListItem Box_02_IconListItem01 CurrentToggleClick"></li>
+					<li class="Box_02_IconListItem Box_02_IconListItem02 CurrentToggleClick"></li>
+					<li class="Box_02_IconListItem Box_02_IconListItem03 CurrentToggleClick"></li>
+					<li class="Box_02_IconListItem Box_02_IconListItem04 CurrentToggleClick"></li>
+				</ul>
+				<div class="IconToggle">
+					<div class="IconToggleBox Box_02_Icon"></div>
+				</div>
+			</div>
+			<div class="BoxItemList Box_02">
+				<div class="IconToggle">
+					<div class="IconToggleBox Box_04_Icon CurrentSelfToggleClick" id="on-off"></div>
+				</div>
+			</div>
+			<div class="BoxItemList Box_02" id="hiddenLight">
+				<div class="IconToggle">
+					<div class="IconToggleBox Box_05_Icon CurrentSelfToggleClick" id="light"></div>
+				</div>
+			</div>
+			<div class="BoxItemList Box_02">
+				<div class="IconToggle">
+					<div class="IconToggleBox Box_06_Icon CurrentSelfToggleClick" id="inside"></div>
+				</div>
+			</div>
+			<div class="CarIconBoxHover" style="width: 100%;height: calc(100% - 1rem);position: absolute;top: 0;left: 0;"></div>
+		</div>
+		<style>
+			.CarIconBox_02{position: absolute;bottom: .6rem;width: 90%;left: 5%;text-align: center;z-index: 8;}
+			.CarIconBox_02 .CarIconBox_02_item{width: 1rem;height: 1rem; border-radius: .06rem; display: inline-block; vertical-align: bottom; position: relative; z-index: 9;
+			background-repeat: no-repeat;background-position: center;background-size: 70%;}
+			.CarIconBox_Right{position: absolute;width: 1rem;right: 1%;top: 50%;margin-top: -1rem;text-align: center;z-index: 2;}
+			.CarIconBox_Right .CarIconBox_Right_item{width: 100%;height: 1rem; border-radius: .06rem;vertical-align: bottom; position: relative; z-index: 9;
+			background-repeat: no-repeat;background-position: center;}
+			.CarIconBox_Right_item01{background-image: url(images/ui/hotspot/jiaohu.png);background-size: 60%;}
+			.CarIconBox_Right_item02{background-image: url(images/ui/hotspot/wenzi.png);background-size: 60%;}
+			.CarIconBox_Right_item03{background-image: url(images/ui/hotspot/wenzi.png);background-size: 60%;}
+			.CarIconBox_Right_item04{background-image: url(images/ui/hotspot/PointGif.png);background-size: 60%;}
+			.CarIconBox_Right_item01.current{background-image: url(images/ui/hotspot/jiaohu@2x.png);}
+			.CarIconBox_Right_item02.current{background-image: url(images/ui/hotspot/wenzi@2x.png);}
+			.CarIconBox_Right_item03.current{background-image: url(images/ui/hotspot/wenzi@2x.png);}
+			.CarIconBox_Right_item04.current{background-image: url(images/ui/hotspot/PointGif@2x.png);}
+		</style>
+		<div class="CarIconBox_02">
+			<div class="CarIconBox_02_item" style="background-image: url(images/ui/component/fadongji_2.png);display: none;"></div>
+			<div class="CarIconBox_02_item" style="background-image: url(images/ui/component/biansu_2.png);display: none;"></div>
+			<div class="CarIconBox_02_item" style="background-image: url(images/ui/component/youxiang_2.png);display: none;"></div>
+			<div class="CarIconBox_02_item" style="background-image: url(images/ui/component/qiao_2.png);display: none;"></div>
+		</div>
+		<div class="CarIconBox_Right">
+			<div class="CarIconBox_Right_item CarIconBox_Right_item01 CurrentToggleClick2" id="point"></div>
+			<div class="CarIconBox_Right_item CarIconBox_Right_item02 CurrentToggleClick2" id="text1"></div>
+			<div class="CarIconBox_Right_item CarIconBox_Right_item03 CurrentToggleClick2" id="text2"></div>
+			<div class="CarIconBox_Right_item CarIconBox_Right_item04 CurrentToggleClick2" id="PointGif"></div>
+		</div>
+		
+		<!-- 文字弹出框 开始 -->
+		<style>
+			.TextAlertBk{position: absolute;z-index: 10;color: #fff;left: 0;right: 0;top: 0;bottom: 0;}
+			/*.TextAlertBk .closedIcon{position: absolute;right: .4rem;top: .4rem;width: .4rem;height: .4rem;background: url(images/ui/close.png) no-repeat center center / 100%;z-index: 2;}*/
+			.layer{width: 100%;height: 100%;position: absolute;left: 0;right: 0;top: 0;bottom: 0; }
+			.TextAlertBk .TextAlertListBox{text-align: justify;width: 100%;max-height: 60vh;padding: .4rem 0 .4rem 0;font-size: 0.28rem;line-height: 1.5em;letter-spacing: .08rem;overflow: auto;background: rgba(0,0,0,0.6);}
+			.TextAlertBk .TextAlertListBox .item{display: none;width: 80%;margin-left: 10%;}
+			.TextAlertBk .TextAlertListBox .item#jiashicangGIF,
+			.TextAlertBk .TextAlertListBox .item#youxiangGIF,
+			{width: 100%;margin-left: 0%;line-height: 0;}
+			.TextAlertBk .TextAlertListBox .item.current{display: block;}
+		</style>
+
+		<div class="TextAlertBk" style="display: none;">
+			<!-- <div class="closedIcon"></div> -->
+			<div class="layer"></div>
+			<div class="TextAlertListBox">
+				<div class="item" id="boli">
+					外观造型出自意大利设计大师乔治亚罗之手。意大利的浪漫、细腻、流畅、阳刚，中国的进取、淳厚、传承、简洁。
+				</div>
+				<div class="item" id="youmen">
+					B10寿命150万公里、世界先进制造工艺、德国大众Audit评审体系、国际知名供应商、1800万公里超高强度试验。<br>
+					全钢材驾驶室，满足国标和欧标法规要求；发动机制动功率高达300kW，制动系统压力提升，制动距离缩短；配备EBS+ESC、ACC+AEBS、LDWS+驾驶员疲劳辅助、FCW等电子主动安全技术。<br>
+					超长质保，整车12个月起、三大总成只换不修（2年/40万公里）、尊享优先服务、上门服务、免费拖车救援、最快服务时效保证（4小时）、J7客服专享热线400-977-9777。
+				</div>
+				<div class="item" id="youxiang">
+					免维护蓄电池。<br>
+					气驱尿素系统：取消尿素泵和DCU。<br>
+					最大可匹配1300升油箱，保证长续航。
+				</div>
+				<div class="item" id="luntai">
+					康迈轮端，高寿命、５０万公里换油。
+				</div>
+				<div class="item" id="xuanjia">
+					前桥采用2片钢板弹簧，保证强度的同时实现轻量化。后空气悬架的布置考虑不同轮心高度的系列化通用，保证1100~1230mm多方案选择，同时考虑超低鞍座方案（鞍座离地高度1000mm以下）。匹配ECAS一键甩挂。<br>
+					小速比后桥：低至2.688速比，适应高速物流空载车速高于100km/h的需求。保养周期20万公里。<br>
+				</div>
+				<div class="item" id="fadongji">
+					500~550马力13升发动机，2600Nm大扭矩，充足的后备功率，加速快、噪音低；换油周期10万公里。<br>
+					铝壳12档AMT变速箱，自重轻、寿命长，保养周期20万公里。<br>
+					空滤：切向进气，一体式双级滤芯，容灰率相对于J6提高两倍。<br>
+					油滤：更大过滤面积，改进滤纸材料和长度，过滤精度提升30%，滤水精度提升3%。<br>
+					水冷空压机，输出稳定，压力高，不窜油。
+				</div>
+				<div class="item" id="ganzaoguan">
+					ＶＣＵ智能控制卸荷、再生、保养提示，保证制动系统清洁度，提升制动系统可靠性。
+				</div>
+				<div class="item" id="daliang">
+					线束从导线、插接器、外防护、胶带、扎带等零部件质量提升，引入优质供应商，装配工艺水平提升。管夹子引入优秀供应商，水管可靠性标准提升。
+				</div>
+				<div class="item" id="youxiangGIF">
+					<img src="images/ui/test01.gif" alt="" style="width: 100%;">
+				</div>
+				<div class="item" id="jiashicangGIF">
+					<img src="images/ui/test02.gif" alt="" style="width: 100%;">
+				</div>
+			</div>
+		</div>
+		<!-- 文字弹出框 结束 -->
+		<!-- 汽车零件说明文字 b -->
+		<style>
+			.componentIntroBox{position: fixed;z-index: 2;top: 0;left: 0;background: rgba(0,0,0,0.5);width: 100%;}
+			.componentIntroBox .item{display: none;padding: .4rem;border-radius: .1rem;line-height: 1.5em;font-size: .28rem;}
+		</style>
+		<div class="componentIntroBox">
+			<!-- 发动机文字： -->
+			<div class="item">
+				锡柴13升550马力发动机拥有国内同级别最强扭矩——2600Nm，经过重新标定，油耗更低，可轻松满足国V排放标准，并具备升级国VI的技术储备。
+			</div>
+			<!-- 变速箱文字： -->
+			<div class="item">
+				新款解放12档AMT变速箱采用铝合金箱体，精心调校的换挡程序比人工换挡品质更好，更省油。
+			</div>
+			<!-- 油箱文字： -->
+			<div class="item">
+				铝合金油箱进一步实现轻量化，如采用后置蓄电池，整车储备油量可达1300升。
+			</div>
+			<!-- 悬架文字： -->
+			<div class="item">
+				两片钢板弹簧前悬架进一步实现轻量化，后桥8气囊空气悬架不仅重量更轻，还可轻松实现一键甩挂，提升运输效率。
+			</div>
+		</div>
+		<!-- 汽车零件说明文字 e -->
+		<style>
+			.switchAudios{width: .5rem;height: .5rem;position: fixed;right: .3rem;top: .3rem;z-index: 2;background-size: contain;background-position: center;background-repeat: no-repeat;background-image: url(images/ui/AudiosIcon/closedAudio.png);}
+			.switchAudios.play{background-image: url(images/ui/AudiosIcon/openAudio.png);}
+		</style>
+		<div class="switchAudios play"></div><!-- 音乐开关 -->
+		<script>
+			$(function(){
+				
+				//默认显示红色
+				$('.Box_01_IconListItem01').addClass('current');
+
+				$('.returnBtnNeishi').hide();
+				$('.returnBtnNeishi').on('click',function(){
+					returnMainScene();
+					$('.CarIconBox').show();
+				})
+				//车轮
+				$('#wheels').on('click',function(){
+					onWheelSelected();
+				})
+				//运行
+				$('#on-off').on('click',function(){
+					onToggleSwitch();
+				})
+				//车灯
+				$('#light').on('click',function(){
+					onToggleLight();
+				})
+				//内饰
+				$('#inside').on('click',function(){
+					onSceneInsideSelected();
+					$('.CarIconBox').hide();
+				})
+				//颜色
+				$('.Box_01_IconListItem').on('click',function(){
+					//var id=$(this).parents('.BoxItemList').attr('id')
+					var index = $(this).index();
+					onColorSelected(index);
+				})
+				//零件
+				$('.Box_02_IconListItem').on('click',function(){
+					var index = $(this).index();
+					onPartSelected(index);
+					$('.switchAudios').hide()
+				})
+				// 切换交互点
+				$('#point').on('click',function(){
+					onImageTextToggle("point");
+				})
+
+				$('#text1').on('click',function(){
+					onImageTextToggle("text-in");
+				})
+
+				$('#text2').on('click',function(){
+					onImageTextToggle("text-out");
+				})
+
+				$('#PointGif').on('click',function(){
+					onImageTextToggle("gif");
+				})
+				$('.Box_02_IconList').on('click',function(){
+					var point = $('#point').hasClass('current')
+					var text1 = $('#text1').hasClass('current')
+					var text2 = $('#text2').hasClass('current')
+					var PointGif = $('#PointGif').hasClass('current')
+					if (point) {
+						onImageTextToggle("point");
+					}
+					if (text1) {
+						onImageTextToggle("text-in");
+					}
+					if (text2) {
+						onImageTextToggle("text-out");
+					}
+					if (PointGif) {
+						onImageTextToggle("gif");
+					}
+					$('.CarIconBox_Right .CarIconBox_Right_item').removeClass('current');
+				})
+
+				//隐藏菜单方法
+				function hideCarIconToggleList(){
+					$('.IconToggleEvent').siblings('.IconToggleEvent').find('.IconToggleBox').removeClass('current')
+					$('.IconToggleEvent').removeClass('lucencyBk')
+					$('.Box_02_IconList').hide()
+					$('.Box_01_IconList').hide()
+				}
+				//切换current
+				$('.CurrentSelfToggleClick').on('click',function(){
+					$(this).toggleClass('current')
+				})
+
+				$('.CurrentToggleClick').on('click',function(){
+					$(this).addClass('current').siblings().removeClass('current');
+				})
+				$('.CurrentToggleClick2').on('click',function(){
+					if($(this).hasClass('current')){
+						$(this).removeClass('current')
+					}else{
+						$(this).addClass('current').siblings().removeClass('current');
+					}
+				})
+				// 显示隐藏icon列表
+				$('.IconToggleEvent').on('click',function(){
+					if ($(this).find('ul').is(":hidden")) {
+						$(this).find('.IconToggleBox').addClass('current')
+						$(this).addClass('lucencyBk')
+						$(this).children('ul').show()
+					}else{
+						$(this).find('.IconToggleBox').removeClass('current')
+						$(this).removeClass('lucencyBk')
+						$(this).children('ul').hide()
+					}
+					$(this).siblings('.IconToggleEvent').find('.IconToggleBox').removeClass('current')
+					$(this).siblings('.IconToggleEvent').find('ul').hide();
+					$(this).siblings('.IconToggleEvent').removeClass('lucencyBk')
+				})
+				$('.CarIconBoxHover').on('click',hideCarIconToggleList)
+					//Box_02_IconListToggleScene
+
+				$('.Box_02_IconListToggleScene li').on('click',function(){
+					var index = $(this).index();
+					$('.CarIconBox_02').show();
+					$('.CarIconBox_02').children('.CarIconBox_02_item').eq(index).show().siblings().hide();
+					$('.CarIconBox').hide();
+				})
+				//零件 返回
+				$('.CarIconBox_02').on('click',function(){
+					$(this).hide();
+					$('.switchAudios').show();
+					$('.CarIconBox').show();
+					hideCarIconToggleList();
+					returnMainScene0();
+				})
+				$('.Box_02 .Box_02_IconListItem').on('click',function(){
+					$('.CarIconBox').hide();
+				})
+
+				// 弹出框begin
+				// fn
+				jQuery.fn.center = function() {
+					this.css('position','absolute');
+					this.css('top', ( $(window).height() - this.height() ) / 2+$(window).scrollTop() + 'px');
+					this.css('left', ( $(window).width() - this.width() ) / 2+$(window).scrollLeft() + 'px');
+					return this;
+				};
+				
+				function showTextBox(e){
+					$('.TextAlertBk').show();
+					// $('.TextAlertListBox').center();
+				}
+					
+				function hideTextBox(){
+					$('.TextAlertBk').hide();
+					$('.switchAudios').show();
+				}
+				// 调用
+				$('.TextAlertBk .closedIcon').on('click',function(){
+					hideTextBox();
+				})
+				$('.TextAlertBk .layer').on('click',function(){
+					hideTextBox();
+				})
+				$('.loading .gif').center();
+				$(window).resize(function(){
+					// $('.TextAlertListBox').center();
+					$('.loading .gif').center();
+				})
+				//弹出框end
+				
+				// 汽车零件说明文字 b
+				$('.Box_02_IconListItem').on('click',function(){
+					var index = $(this).index()
+					$('.componentIntroBox .item').eq(index).show().siblings().hide();
+				})
+				$('.CarIconBox_02').on('click',function(){
+					$('.componentIntroBox .item').hide();
+				})
+				// 汽车零件说明文字 e
+			})
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var container, controls;
+			var camera, scene, renderer, light;
+			var clock = new THREE.Clock();
+			var texmap = new Map();
+			var matmap = new Map();
+			var texloader = new THREE.TextureLoader();
+			var cubetexloader = new THREE.CubeTextureLoader();
+			var truckEnvMap;
+			var groundStartY=50;
+			var actions=[];
+			var audio,listener;
+			var audioIsReady=false;
+			var projectName="Truck";
+			var childMeshs=[];
+			var cameraTransit;
+			var cameraState=1;
+			var truckModel;
+			var truckParts=["","","","",""];
+			var mixer;
+			var groundMaterial;
+			var isPlayAudio=true;
+			var bIn=false;
+			var cameraIn , sceneIn, controlsIn;
+			var textureCubeIn;
+			var actionMap = new Map();
+			var isRunning = false;
+			var lights=[];
+			var isLightOn=false;
+			var curColor=0;
+			var dimianModel;
+			var biansuxiangModel,fadongjiModel,youxiangModel,houqiaoModel;
+			var sprites = [];
+			var pointSprites=[];//点
+			var textInSprites=[];//里
+			var textOutSprites=[];//外
+			var gifSprites=[];//GIF
+			var isPoint=false,isTextIn=false,isTextOut=false, isGIF = false;
+
+			init();
+
+			function initContainer()
+			{
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+			}
+			function initAudio()
+			{
+				var onProgress = function (xhr) {
+                    if (xhr.lengthComputable) {
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+                        // console.log("下载音乐:" + Math.round(percentComplete, 2) + '% downloaded');
+                    }
+                };
+                var onError = function (xhr) {
+                    console.log("下载音乐出错！")
+                };
+                var audioFile = 'audios/wavefile_short.mp3';
+                new THREE.AudioLoader().load( audioFile, function ( buffer ) {
+					listener = new THREE.AudioListener();
+					audio = new THREE.Audio( listener ).setBuffer( buffer );
+					listener.position.z = 1;
+					audio.loop=true;
+					// 音乐开关
+					$('.switchAudios').on('click',function(){
+						if (audio.isPlaying) {
+							audio.pause()
+							$('.switchAudios').removeClass('play');
+						}else{
+							audio.play()
+							$('.switchAudios').addClass('play');
+						}
+					})
+					if(isPlayAudio ===true)
+					{
+						audio.play();
+					}
+					audioIsReady = true;
+				}, onProgress, onError );
+			}
+			function initRenderer()
+			{
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.shadowMap.enabled = true;
+				renderer.gammaInput = true;
+                renderer.gammaOutput = true;
+				container.appendChild( renderer.domElement );
+			}
+			function initSceneOutside()
+			{
+                scene = new THREE.Scene();
+                scene.fog = new THREE.Fog( 0xffffff, 50, 5000 );
+			}
+			function initSceneOutCamera()
+			{
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.set( 100, 200, 300 );
+			}
+			function initSceneOutControls()
+			{
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+                controls.maxPolarAngle = Math.PI * 0.5;
+                controls.minDistance = 20;
+                controls.maxDistance = 400;
+                controls.target.set( 0, 100, 0 );
+                controls.enablePan = false; 
+                controls.enableZoom = true; 
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.3;
+		        controls.update();
+			}
+			function initSceneOutLight()
+			{
+				var light = new THREE.DirectionalLight( 0xdfebff, 1 );
+                light.position.set( 100, 100, 100 );//50 200 100
+                light.position.multiplyScalar( 1.3 );
+                light.castShadow = true;
+                light.shadow.mapSize.width = 1024;
+                light.shadow.mapSize.height = 1024;
+                var d = 300;
+                light.shadow.camera.left = - d;
+                light.shadow.camera.right = d;
+                light.shadow.camera.top = d;
+                light.shadow.camera.bottom = - d;
+                light.shadow.camera.far = 1000;
+                scene.add( light );
+
+				scene.add( new THREE.HemisphereLight( 0x887777, 0x666688, 4 ) );
+			}
+			function initSceneOutSphere()
+			{
+				//声明一个球体
+                var geometry = new THREE.SphereBufferGeometry( 512*4, 60, 40 );
+				// 反转X轴上的几何图形，使所有的面点向内。
+                geometry.scale( - 1, 1, 1 );
+                //声明球体纹理
+                var material = new THREE.MeshBasicMaterial( {
+                    map: texloader.load( 'images/skybox/guangchang.jpg' ) //加载一整张纹理图片
+                } );
+				mesh = new THREE.Mesh( geometry, material );
+                mesh.position.y = 200;
+                scene.add( mesh );
+			}
+			function initSceneOutGround()
+			{
+				var map = texloader.load("images/ground/ground.jpg");
+				var alphamap = texloader.load("images/ground/groundmask2.jpg");
+				groundMaterial = new THREE.ShaderMaterial( {
+					uniforms: {
+						"map": { type: "t", value: map },
+						"alphamap": { type: "t", value: alphamap },
+						"offsetx": { type: "f", value: 0 },
+						"offsety": { type: "f", value: 0 },
+						"alphaoffset": { type: "c", value: new THREE.Vector2() }
+					},
+					vertexShader: document.getElementById( 'vs' ).textContent,
+					fragmentShader: document.getElementById( 'fs' ).textContent,
+					transparent: true
+				} );
+
+				var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 1024, 1024 ), groundMaterial );
+				mesh.rotation.x = - Math.PI / 2;
+				mesh.position.y = 50;
+				mesh.receiveShadow = true;
+                mesh.position = groundStartY;
+                scene.add( mesh );
+			}
+			function initSceneOutGroundAo()
+			{
+				var path = "models/fbx/ground/";
+                var modelUrl =path + "dimian.fbx";
+                
+                var onProgress = function (xhr) {
+                    if (xhr.lengthComputable) {
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+                        // console.log("下载地面模型" + Math.round(percentComplete, 2) + '% downloaded');
+                    }
+                };
+                var onError = function (xhr) {
+                    console.log("下载地面模型出错！");
+                };
+                var loader = new THREE.FBXLoader();
+                loader.load(modelUrl, function (object) {
+                    // console.log("加载地面:",object);
+                    object.position.y = groundStartY+1;
+                    object.traverse( function ( child ) {
+                        if ( child.isMesh ) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            //child.material.side= THREE.DoubleSide;
+                            child.frustumCulled = false;
+                            var mat = new THREE.MeshStandardMaterial();
+                            mat.map = texloader.load(path + "AO_ao.jpg");
+                            mat.alphaMap = texloader.load(path + "AO_alpha.png");
+                            mat.transparent = true;
+                            mat.opacity = 1;
+                            mat.skinning = true;
+                            child.material = mat;
+                        }
+					} );
+					dimianModel = object;
+                    scene.add( object );
+                }, onProgress, onError);
+			}
+			function initSceneOutModel()
+			{
+				var path = "models/fbx/truck/";
+                var modelUrl =path + "kache.FBX";
+                var onProgress = function (xhr) {
+                    if (xhr.lengthComputable) {
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+						$('.wz').html(Math.round(percentComplete, 2) + '%')
+                        if(Math.round(percentComplete, 2) == 100)
+                        {
+                            console.log("下载卡车模型结束");
+                            //请求完成，隐藏模态框
+							$('div.loading').fadeOut(1000);
+                        }
+                    }
+                };
+				var onError = function (xhr) {
+                    console.log("下载卡车模型出错！");
+                };
+				var loader = new THREE.FBXLoader();
+                loader.load(modelUrl, function (object) {
+					// console.log("加载卡车模型:",object);
+					truckModel = object;
+					object.position.y = groundStartY;
+					object.traverse( setmaterial );
+					object.mixer = new THREE.AnimationMixer( object );
+                    mixer = object.mixer;
+	
+					loader.load(path + "attach.FBX", function (attachobj) {
+						attachobj.scale.x = 0.394;
+						attachobj.scale.y = 0.394;
+						attachobj.scale.z = 0.394;
+						attachobj.traverse( setmaterial );
+						matmap.get('attach_mat').color = new THREE.Color(0x343539);
+						matmap.get('attach_mat').map = null;
+						matmap.get('attach_mat').normalMap = null;
+						matmap.get('attach_mat').roughness = 0.5;
+						matmap.get('attach_mat').roughnessMap = null;
+						matmap.get('attach_mat').metalness = 1;
+						matmap.get('attach_mat').metalnessMap = null;
+						// attachobj.children[0].material = matmap.get('attach_mat');
+						object.add( attachobj );
+					});
+
+					path += "actions/";
+					loadActions(loader, path, mixer);
+					initModelLight(object, -70,18,22,  "hsl(188, 14%, 98%)",15, "lensflare0.png");
+					initModelLight(object, -70,18,-22, "hsl(188, 14%, 98%)",15, "lensflare0.png");
+					initModelLight(object, 72,17,20,   "hsl(0, 57%, 100%)",10, "lensflare0wed.png");
+					initModelLight(object, 72,17,-20,  "hsl(0, 57%, 100%)",10, "lensflare0wed.png");
+
+					initinteraction();
+					scene.add( object );
+				}, onProgress, onError);
+			}
+			function loadActions(loader, path, mixer)
+			{
+				loader.load(path + "chegai.FBX", function(anim){
+					getAction("chegai", mixer, anim, false);
+				});
+				loader.load(path + "chelun.FBX", function(anim){
+					getAction("chelun", mixer, anim, true);
+					onToggleSwitch();
+				});
+				loader.load(path + "chetou.FBX", function(anim){
+					getAction("chetou", mixer, anim, false);
+				});
+				loader.load(path + "youchemen.FBX", function(anim){
+					getAction("youchemen", mixer, anim, false);
+				});
+				loader.load(path + "youxinglixiang.FBX", function(anim){
+					getAction("youxinglixiang", mixer, anim, false);
+				});
+				loader.load(path + "zuochemen.FBX", function(anim){
+					getAction("zuochemen", mixer, anim, false);
+				});
+				loader.load(path + "zuoxinglixiang.FBX", function(anim){
+					getAction("zuoxinglixiang", mixer, anim, false);
+				});
+			}
+			function setmaterial( child )
+			{
+				if ( child.isMesh ) {
+					sprites.push(child);
+					child.castShadow = true;
+					child.receiveShadow = true;
+					//child.material.side= THREE.DoubleSide;
+					child.frustumCulled = false;
+					if(child.material.name != undefined && child.material.name != "")
+					{
+						child.material = matmap.get(child.material.name);
+						childMeshs.push(child);
+					}
+				}
+			}
+			function getAction(name, mixer, anim, bLoop)
+			{
+				// console.log("加载动作:",anim);
+				for(var i=0;i<anim.animations.length;i++)
+				{
+					var action = mixer.clipAction( anim.animations[ i ] );
+					if(bLoop)
+					{
+						action.setLoop(THREE.LoopRepeat);
+					}else
+					{
+						action.setLoop(THREE.LoopPingPong);
+						action._mixer.addEventListener( 'loop', function( e ) { 
+						if(e.action._clip.uuid === action._clip.uuid)
+						{
+							action.paused = true;
+						}
+						});
+						action.clampWhenFinished = true; 
+					}
+					actionMap.set(name,action);
+				} 
+			}
+			function initinteraction()
+			{
+				var motion = texloader.load( "images/ui/hotspot/jiaohu.png" );
+				//var mat = new THREE.SpriteMaterial( { map: fun, transparent: true, fog: true, depthTest: false } );
+				var mat = new THREE.SpriteMaterial( { map: motion, transparent: true, fog: true, depthTest: true } );
+				var sprite = new THREE.Sprite( mat );
+				sprite.scale.x = 10;
+				sprite.scale.y = 10;
+				var text = texloader.load( "images/ui/hotspot/wenzi.png" );
+				var textmat = new THREE.SpriteMaterial( { map: text, transparent: true, fog: true, depthTest: true } );
+				var textsprite = new THREE.Sprite( textmat );
+				textsprite.scale.x = 10;
+				textsprite.scale.y = 10;
+				var gif = texloader.load( "images/ui/hotspot/PointGif.png" );
+				var gifmat = new THREE.SpriteMaterial( { map: gif, transparent: true, fog: true, depthTest: true } );
+				var gifsprite = new THREE.Sprite( gifmat );
+				gifsprite.scale.x = 10;
+				gifsprite.scale.y = 10;
+				
+				//动作交互点
+				addtextfun(sprite, 'zuochemen', -50, 40, 30,pointSprites);
+				addtextfun(sprite, 'youchemen', -50, 40, -30,pointSprites);
+
+				//汽车外部说明
+				addtextfun(textsprite, 'boli', -73, 45, 0,textOutSprites);
+				addtextfun(textsprite, 'youmen', -50, 40, -30,textOutSprites);
+				addtextfun(textsprite, 'youxiang', 3, 18, -30,textOutSprites);
+				addtextfun(textsprite, 'luntai', 28, 12, 30,textOutSprites);
+
+				//汽车零件说明
+				addtextfun(textsprite, 'xuanjia', 65, 25, -9,textInSprites);
+				addtextfun(textsprite, 'fadongji', -22, 24, 0,textInSprites);
+				addtextfun(textsprite, 'ganzaoguan', 12, 25, 5,textInSprites);
+				addtextfun(textsprite, 'daliang', 3, 25, -6,textInSprites);
+
+				//GIF资料
+				addtextfun(gifsprite, 'youxiangGIF', 3, 18, 30,gifSprites);
+				addtextfun(gifsprite, 'jiashicangGIF', -50, 40, 30,gifSprites);
+
+				function addtextfun(origion, name, x, y, z, arr)
+				{
+					var fun = origion.clone();
+					truckModel.add(fun);
+					fun.name = name;
+					fun.position.set(x,y,z);
+					arr.push(fun);
+				}
+
+				updateImageText();
+			}
+			function initSceneOutEnvmap()
+			{
+				var r = "images/skybox/";
+                var urls = [
+                        r + "px.jpg", r + "nx.jpg",
+                        r + "py.jpg", r + "ny.jpg",
+                        r + "pz.jpg", r + "nz.jpg"
+                ];
+                truckEnvMap = cubetexloader.load( urls );
+			}
+			function initTransitionCamera()
+			{
+				cameraTransit = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+				cameraTransit.position.set( 100, 200, 300 );
+				scene.add( cameraTransit );
+			}
+			function initModelLight(parent, x, y, z, c, i, flarename)
+			{
+				var light = new THREE.PointLight( c, i, i );
+				scene.add( light );
+
+				light.visible = false;
+				lights.push(light);
+				THREE.SceneUtils.attach(light, scene, parent);
+				parent.updateMatrixWorld();
+				light.position.set( x, y, z );
+
+				var path = 'images/lensflare/';
+				var textureFlare0 = texloader.load( path + flarename);
+				var lensflare = new THREE.Lensflare();
+				lensflare.addElement( new THREE.LensflareElement( textureFlare0, 150, 0.01, light.color ) );
+				light.add( lensflare );
+			}
+			function initSceneOutParts(name)
+			{
+				var path = "models/fbx/truck/components/";
+				var modelUrl =path + name + ".fbx";
+                var onProgress = function (xhr) {
+                    if (xhr.lengthComputable) {
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+                        // console.log("下载零件模型" + Math.round(percentComplete, 2) + '% downloaded');
+                    }
+                };
+                var onError = function (xhr) {
+                    console.log("下载零件模型出错！");
+                };
+                var loader = new THREE.FBXLoader();
+                loader.load(modelUrl, function (object) {
+					console.log("加载零件模型:",object);
+					object.position.y = groundStartY-10;
+					var scale = 1;
+					if(name == "fadongji_mat")
+					{
+						fadongjiModel = object;
+						object.position.x = 150;
+						scale = 1.4;
+
+						loader.load(path + "fadongji_mat_1.fbx", function (attachobj) {
+							attachobj.traverse( function ( child ) {
+								if ( child.type === "Mesh" ) {
+									child.castShadow = true;
+									child.receiveShadow = true;
+									child.frustumCulled = false;
+									child.material.map = texmap.get(child.material.name + '_Base_Color');
+									child.material.metalnessMap = texmap.get(child.material.name + '_Metallic');
+									child.material.roughnessMap = texmap.get(child.material.name + '_Roughness');
+									child.material.normalMap = texmap.get(child.material.name + '_Normal_OpenGL');
+									child.material.roughness =1;
+									child.material.metalness =1;
+									child.material.reflectivity = 1;
+									child.material.envMap = truckEnvMap;
+								}
+								fadongjiModel.add( attachobj );
+							});
+						});
+
+					}else if(name == "biansuxiang_mat_1")
+					{
+						biansuxiangModel = object;
+						object.position.x = 60;
+						scale = 1.5;
+					}else if(name == "youxiang_mat_1")
+					{
+						youxiangModel = object;
+						scale = 2.5;
+					}else if(name == "houqiao_mat")
+					{
+						houqiaoModel = object;
+						scale = 2;
+					}
+					object.scale.x = scale;
+					object.scale.y = scale;
+					object.scale.z = scale;
+
+                    object.traverse( function ( child ) {
+                        if ( child.type === "Mesh" ) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            child.frustumCulled = false;
+							child.material.map = texmap.get(child.material.name + '_Base_Color');
+							child.material.metalnessMap = texmap.get(child.material.name + '_Metallic');
+							child.material.roughnessMap = texmap.get(child.material.name + '_Roughness');
+							child.material.normalMap = texmap.get(child.material.name + '_Normal_OpenGL');
+							child.material.roughness =1;
+							child.material.metalness =1;
+							child.material.reflectivity = 1;
+							child.material.envMap = truckEnvMap;
+                        }
+					} );
+					object.visible = false;
+					scene.add( object );
+					return object;
+				}, onProgress, onError);
+				return null;
+			}
+			function loadtexturemap(path)
+			{
+				$.getJSON(path, function (data){
+					$.each(data, function (infoIndex, info){
+						var tex = texloader.load(info);
+						texmap.set(infoIndex, tex);
+						var pos = infoIndex.indexOf('_');
+						pos = infoIndex.indexOf('_', pos+1);
+						var key = infoIndex.substring(0, pos);
+						if(matmap.has(key))
+						{
+							var tail = infoIndex.substring(pos);
+							if (tail === '_Base_Color' || tail === '_Base_Color_0')
+								matmap.get(key).map = tex;
+							else if (tail === '_Normal_OpenGL')
+								matmap.get(key).normalMap = tex;
+							else if (tail === '_Roughness')
+								matmap.get(key).roughnessMap = tex;
+							else if (tail === '_Metallic')
+								matmap.get(key).metalnessMap = tex;
+							else if (tail === '_Opacity')
+							{
+								matmap.get(key).alphaMap = tex;
+								matmap.get(key).transparent = true;
+                            	matmap.get(key).opacity = 1;
+							}
+						}
+					});
+				});
+			}
+			function loadmaterialmap(path)
+			{
+				$.getJSON(path, function (data){
+					for (i in data) {
+						var mat = new THREE.MeshStandardMaterial({
+							name: data[i],
+							roughness: 1,
+							metalness: 1,
+							envMap: truckEnvMap,
+							envMapIntensity: 1,
+							refractionRatio: 0.3,
+							skinning: true
+						});
+						if (texmap.has(data[i]+'_Base_Color'))//curColor
+						{
+							mat.map = texmap.get(data[i]+'_Base_Color');
+						}
+						else
+						{
+							mat.map = texmap.get(data[i]+'_Base_Color_'+curColor);
+						}
+						if (texmap.has(data[i]+'_Normal_OpenGL'))
+						{
+							mat.normalMap = texmap.get(data[i]+'_Normal_OpenGL');
+						}
+						if (texmap.has(data[i]+'_Roughness'))
+						{
+							mat.roughnessMap = texmap.get(data[i]+'_Roughness');
+						}
+						if (texmap.has(data[i]+'_Metallic'))
+						{
+							mat.metalnessMap = texmap.get(data[i]+'_Metallic');
+						}
+						if (texmap.has(data[i]+'_Opacity'))
+						{
+							mat.alphaMap = texmap.get(data[i]+'_Opacity');
+                            mat.transparent = true;
+                            mat.opacity = 1;
+						}
+						matmap.set(data[i], mat);
+					}
+				});
+			}
+			function initCarOutside()
+			{
+				//初始化场景
+				initSceneOutside();
+				//初始化摄像机
+				initSceneOutCamera();
+				//初始化摄像机控制器
+				initSceneOutControls();
+				//初始化灯光
+				initSceneOutLight();
+				//初始化环境球
+				initSceneOutSphere();
+				//初始化地面
+				initSceneOutGround();
+				//初始化地面AO
+				initSceneOutGroundAo();
+				//加载车模型
+				initSceneOutModel();
+				//加载部件模型
+
+				initSceneOutParts("biansuxiang_mat_1");
+				initSceneOutParts("fadongji_mat");
+				initSceneOutParts("houqiao_mat");
+				initSceneOutParts("youxiang_mat_1");
+
+				//初始化切场摄像机
+				initTransitionCamera();
+
+				//初始化图文
+				//updateImageText();
+
+				document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+			}
+			var raycaster = new THREE.Raycaster();
+			function onDocumentTouchStart(event)
+			{
+				var mouse = new THREE.Vector2();
+				mouse.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
+        		mouse.y = - ( event.touches[0].clientY / window.innerHeight ) * 2 + 1;
+				onScreenRaycaster(mouse);
+			}
+			function onDocumentMouseDown(event)
+			{
+				var mouse = new THREE.Vector2();
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+				onScreenRaycaster(mouse);
+			}
+			function onScreenRaycaster(mouse)
+			{
+				raycaster.setFromCamera( mouse, camera );
+
+				var arr = [];
+
+				if(isPoint)
+				{
+					arr = pointSprites.concat(sprites);
+				}
+				if(isTextIn)
+				{
+					arr = textInSprites.concat(sprites);
+				}
+				if(isTextOut)
+				{
+					arr = textOutSprites.concat(sprites);
+				}
+				if(isGIF)
+				{
+					arr = gifSprites.concat(sprites);
+				}
+				var intersects = raycaster.intersectObjects(arr);
+				if (intersects.length > 0)
+				{
+					var obj = intersects[0];
+					if(obj.object.type === "Sprite")
+					{
+						//console.log(obj.object.name);
+						if(isPoint)
+						{
+							playActionByName(obj.object.name);
+						}
+						if(isTextIn || isTextOut || isGIF)
+						{
+							ShowImageText(obj.object.name);
+						}
+					}
+				}
+			}
+			function playActionByName(name)
+			{
+				var action = actionMap.get(name);
+				if(action.paused === false)
+				{
+					action.play();
+				}else
+				{
+					action.paused = false;
+				}
+			}
+			function ShowImageText(name)
+			{
+				$('#' + name).show().siblings().hide();
+				$('.TextAlertBk').show();
+				$('.switchAudios').hide();
+
+			}
+			function initCarInside()
+			{
+				var r = "images/car-interiors/";
+                var urls = [
+					r + "px.jpg", r + "nx.jpg",
+					r + "py.jpg", r + "ny.jpg",
+					r + "pz.jpg", r + "nz.jpg"
+                ];
+                textureCubeIn = cubetexloader.load( urls );
+                sceneIn = new THREE.Scene();
+                sceneIn.background = textureCubeIn;
+
+                cameraIn = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+				cameraIn.position.set(0, 200, 200 );
+				cameraIn.rotation.y += 30;
+                sceneIn.add(cameraIn);
+
+                var light = new THREE.DirectionalLight( 0xdfebff, 1 );
+                light.position.set( 100, 100, 100 );//50 200 100
+                light.position.multiplyScalar( 1.3 );
+                light.castShadow = true;
+                light.shadow.mapSize.width = 1024;
+                light.shadow.mapSize.height = 1024;
+                var d = 300;
+                light.shadow.camera.left = - d;
+                light.shadow.camera.right = d;
+                light.shadow.camera.top = d;
+                light.shadow.camera.bottom = - d;
+                light.shadow.camera.far = 1000;
+                sceneIn.add( light );
+
+                //设置相机控件，这行代码能让我们按指定度数，旋转相机
+                controlsIn = new THREE.OrbitControls( cameraIn, renderer.domElement );
+                controlsIn.enablePan = false; 
+                controlsIn.enableZoom = false; 
+                controlsIn.target.set( 0, 100, 0 );
+			}
+			function init() {
+				//加载材质
+				loadtexturemap("models/fbx/truck/tex.json");
+				loadmaterialmap("models/fbx/truck/mat.json");
+				//初始化显示容器
+				initContainer();
+				//初始化渲染器
+				initRenderer();
+				//初始化背景音乐
+				initAudio();
+				//加载车envmap
+				initSceneOutEnvmap();
+				//初始化车外环境
+				initCarOutside();
+				//初始化车内环境
+				initCarInside();
+				
+				window.addEventListener( 'resize', onWindowResize, false );
+				animate();
+			}
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+			function animate() {
+				requestAnimationFrame( animate );
+
+				var run = false;
+				if(truckModel)
+					run = truckModel.visible;
+				
+				if(isRunning && run)
+				{
+					var x = Date.now() * 0.00009 % 1;
+					groundMaterial.uniforms['offsetx'].value = -x;
+					groundMaterial.needsUpdate = true;
+				}
+				
+				if(mixer)
+                {
+                    mixer.update( clock.getDelta() );
+                }
+
+				if(bIn)
+                {
+					controlsIn.update();
+                    renderer.render( sceneIn, cameraIn );
+				}
+				else
+				{
+					controls.update();
+					if(cameraState == 1 )
+						renderer.render( scene, camera );
+					else if(cameraState == 2)
+						renderer.render( scene, cameraTransit );
+				}
+				TWEEN.update();
+			}
+			//颜色
+			function onColorSelected(index)
+			{
+				changeColor(index);
+			}
+			function changeColor(index)
+			{
+				if(index === curColor)
+					return;
+
+				curColor = index;
+				for(var i=0;i<childMeshs.length;++i)
+				{
+					var name = childMeshs[i].material.name;
+					if (!texmap.has(name+'_Base_Color'))
+						childMeshs[i].material.map = texmap.get(name+'_Base_Color_'+curColor);
+				}
+			}
+			//播放动作
+			function playAction(index)
+			{
+				var name = "";
+				switch(index)
+				{
+					case 1:
+						name = "chegai"
+					break;
+					case 2:
+						name = "chetou"
+					break;
+					case 3:
+						name = "youchemen"
+					break;
+					case 4:
+						name = "youxinglixiang"
+					break;
+					case 5:
+						name = "zuochemen"
+					break;
+					case 6:
+						name = "zuoxinglixiang"
+					break;
+				}
+			
+				var action = actionMap.get(name);
+				if(action.paused === false)
+					action.play();
+				else
+					action.paused = false;
+			}
+			function hideAllModel()
+			{
+				truckModel.visible = false;
+				dimianModel.visible = false;
+				fadongjiModel.visible = false;
+				biansuxiangModel.visible = false;
+				youxiangModel.visible = false;
+				houqiaoModel.visible = false;
+			}
+			//零件
+			function onPartSelected(index)
+			{
+				// console.log("onPartSelected:",index);
+				hideAllModel();
+				if(index == 0)//发动机
+				{
+					fadongjiModel.visible = true;
+					changeUI(2);
+					
+				}else if(index == 1)//变速箱
+				{
+					biansuxiangModel.visible = true;
+					changeUI(3);
+				}else if(index == 2)//邮箱
+				{
+					youxiangModel.visible = true;
+					changeUI(4);
+
+				}else if(index == 3)//前后桥
+				{
+					houqiaoModel.visible = true;
+					changeUI(5);
+				}
+			}
+			//车轮
+			function onWheelSelected()
+			{
+			}
+			//车运动状态
+			function onToggleSwitch()
+			{
+				isRunning = !isRunning;
+				if(actionMap.has("chelun"))
+				{
+					var amin = actionMap.get("chelun");
+					if(isRunning)
+						amin.play();
+					else
+						amin.stop();
+				}
+			}
+			//车灯
+			//ios适配
+			if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)){
+				$('#hiddenLight').hide();
+				$('.switchAudios').removeClass('play')
+			}
+			function onToggleLight()
+			{
+				if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent))
+					return;
+				
+				isLightOn = !isLightOn;
+				for(var i=0;i<lights.length;++i)
+				{
+					lights[i].visible = isLightOn;
+				}
+			}
+			//进入车内饰场景
+			function onSceneInsideSelected()
+			{
+				playCutScene();
+			}
+			function playCutScene()
+			{
+				TWEEN.removeAll();
+				var tween;
+				var div=document.getElementById('show');
+				div.style.opacity=0;
+				$('#show').show();
+				var i=0,j=0;
+				var from, target, distance;
+				var onUpdate = function()
+				{
+					var pos = new THREE.Vector3(this.x-target.x,this.y-target.y,this.z-target.z);
+					var l = pos.length() / distance;
+					if(i < 1)
+					{
+						if (l < 0.5)
+						{
+							i+=0.05;
+							if (i>1)
+								i=1;
+							div.style.opacity=i;
+						}
+					}
+					else if(j < 1)
+					{
+						j+=0.05;
+						if (j>1)
+							j=1;
+						div.style.opacity=1-j;
+						if (!bIn)
+						{
+							bIn = true;
+							changeUI(0);
+							cameraState = 2;
+						}
+					}
+				}
+				var oncomplete = function()
+				{
+					div.style.opacity=0;
+					$('#show').hide();
+					if (!bIn)
+					{
+						bIn = true;
+						changeUI(0);
+						cameraState = 2;
+					}
+				}
+
+				from = new THREE.Vector3(camera.position.x,camera.position.y,camera.position.z);
+				target = new THREE.Vector3(camera.position.x*0.8,camera.position.y*0.8,camera.position.z*0.8);
+				from.x -= target.x;
+				from.y -= target.y;
+				from.z -= target.z;
+				distance = from.length();
+				tween = new TWEEN.Tween( camera.position )
+				.to( {x:target.x,y:target.y,z:target.z}, 2000 )
+				.easing( TWEEN.Easing.Quartic.InOut)
+				.onUpdate(onUpdate)
+				.onComplete(oncomplete)
+				.start();//减速到0的缓动，也就是先快后慢
+			}
+			
+			function changeUI(index)
+			{
+				if(index === 0)
+                {
+                    $('.Box_01_Icon').hide();
+                    $('.Box_02_Icon').hide();
+                    $('.Box_03_Icon').hide();
+                    $('.Box_04_Icon').hide();
+					$('.Box_05_Icon').hide();
+                    $('.Box_06_Icon').hide();
+					$('.CarIconBox_Right_item01').hide();
+					$('.CarIconBox_Right_item02').hide();
+					$('.CarIconBox_Right_item03').hide();
+					$('.CarIconBox_Right_item04').hide();
+                    $('.returnBtnNeishi').show();
+                    
+                }else if(index ===1)
+                {
+                    $('.Box_01_Icon').show();
+                    $('.Box_02_Icon').show();
+                    $('.Box_03_Icon').show();
+                    $('.Box_04_Icon').show();
+					$('.Box_05_Icon').show();
+                    $('.Box_06_Icon').show();
+					$('.CarIconBox_Right_item01').show();
+					$('.CarIconBox_Right_item02').show();
+					$('.CarIconBox_Right_item03').show();
+					$('.CarIconBox_Right_item04').show();
+                    $('.returnBtnNeishi').hide();
+				}else if(index === 2)//发动机
+				{
+					$('.IconToggleEvent').siblings('.IconToggleEvent').find('.IconToggleBox').removeClass('current')
+					$('.IconToggleEvent').removeClass('lucencyBk')
+					$('.Box_02_IconList').hide()
+					$('.Box_01_IconList').hide()
+					$('.CarIconBox_Right_item01').hide();
+					$('.CarIconBox_Right_item02').hide();
+					$('.CarIconBox_Right_item03').hide();
+					$('.CarIconBox_Right_item04').hide();
+				}else if(index === 3)//变速箱
+				{
+					$('.IconToggleEvent').siblings('.IconToggleEvent').find('.IconToggleBox').removeClass('current')
+					$('.IconToggleEvent').removeClass('lucencyBk')
+					$('.Box_02_IconList').hide()
+					$('.Box_01_IconList').hide()
+					$('.CarIconBox_Right_item01').hide();
+					$('.CarIconBox_Right_item02').hide();
+					$('.CarIconBox_Right_item03').hide();
+					$('.CarIconBox_Right_item04').hide();
+				}else if(index === 4)//油箱
+				{
+					$('.IconToggleEvent').siblings('.IconToggleEvent').find('.IconToggleBox').removeClass('current')
+					$('.IconToggleEvent').removeClass('lucencyBk')
+					$('.Box_02_IconList').hide()
+					$('.Box_01_IconList').hide()
+					$('.CarIconBox_Right_item01').hide();
+					$('.CarIconBox_Right_item02').hide();
+					$('.CarIconBox_Right_item03').hide();
+					$('.CarIconBox_Right_item04').hide();
+				}else if(index === 5)//后桥
+				{
+					$('.IconToggleEvent').siblings('.IconToggleEvent').find('.IconToggleBox').removeClass('current')
+					$('.IconToggleEvent').removeClass('lucencyBk')
+					$('.Box_02_IconList').hide()
+					$('.Box_01_IconList').hide()
+					$('.CarIconBox_Right_item01').hide();
+					$('.CarIconBox_Right_item02').hide();
+					$('.CarIconBox_Right_item03').hide();
+					$('.CarIconBox_Right_item04').hide();
+				}
+			}
+			function showTruck()
+			{
+				hideAllModel();
+				truckModel.visible = true;
+				dimianModel.visible = true;
+			}
+			function returnMainScene0()
+			{
+				changeUI(1);
+				showTruck();
+			}
+			function returnMainScene()
+			{
+				playCutSceneOut();
+			}
+			function playCutSceneOut()
+			{
+				TWEEN.removeAll();
+				var tween;
+				var div=document.getElementById('show');
+				div.style.opacity=0;
+				$('#show').show();
+				var i=0,j=0;
+				var from, target, distance;
+				var onUpdate = function()
+				{
+					if(i<1)
+					{
+						i+=0.05;
+						if (i>1)
+							i=1;
+						div.style.opacity=i;
+					}
+					else if(j<1)
+					{
+						j+=0.05;
+						if (j>1)
+							j=1;
+						div.style.opacity=1-j;
+						if (bIn)
+						{
+							bIn = false;
+							changeUI(1);
+							showTruck();
+							cameraState = 1;
+						}
+					}
+				}
+				var oncomplete = function()
+				{
+					div.style.opacity=0;
+					$('#show').hide();
+					if (bIn)
+					{
+						bIn = false;
+						changeUI(1);
+						showTruck();
+						cameraState = 1;
+					}
+				}
+
+				from = new THREE.Vector3(camera.position.x,camera.position.y,camera.position.z);
+				target = new THREE.Vector3(camera.position.x*1.25,camera.position.y*1.25,camera.position.z*1.25);
+				from.x -= target.x;
+				from.y -= target.y;
+				from.z -= target.z;
+				distance = from.length();
+				tween = new TWEEN.Tween( camera.position )
+				.to( {x:target.x,y:target.y,z:target.z}, 2000 )
+				.easing( TWEEN.Easing.Quartic.InOut)
+				.onUpdate(onUpdate)
+				.onComplete(oncomplete)
+				.start();//减速到0的缓动，也就是先快后慢
+			}
+			function updateImageText()
+			{
+				for(var i=0;i<pointSprites.length;++i)
+				{
+					pointSprites[i].visible = isPoint;
+				}
+				for(var i=0;i<textInSprites.length;++i)
+				{
+					textInSprites[i].visible = isTextIn;
+				}
+				for(var i=0;i<textOutSprites.length;++i)
+				{
+					textOutSprites[i].visible = isTextOut;
+				}
+				for(var i=0;i<gifSprites.length;++i)
+				{
+					gifSprites[i].visible = isGIF;
+				}
+			}
+			function onImageTextToggle(type)
+			{
+				if(type === "point")
+				{
+					isPoint=!isPoint;	
+					if(isPoint === true)
+					{
+						isTextIn= false;
+						isTextOut= false;
+						isGIF= false;
+					}
+				}else if(type === "text-in")
+				{
+					isTextIn=!isTextIn;
+					if(isTextIn === true)
+					{
+						isPoint = false;
+						isTextOut= false;
+						isGIF= false;
+					}
+				}else if(type === "text-out")
+				{
+					isTextOut=!isTextOut;
+					if(isTextOut === true)
+					{
+						isPoint = false;
+						isTextIn= false;
+						isGIF= false;
+					}
+				}else if(type === "gif")
+				{
+					isGIF=!isGIF;
+					if(isGIF === true)
+					{
+						isPoint = false;
+						isTextIn= false;
+						isTextOut= false;
+					}
+				}
+				updateImageText();
+			}		
+		</script>
+	</body>
+</html>
